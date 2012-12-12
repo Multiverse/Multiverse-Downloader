@@ -44,13 +44,18 @@ public class MultiverseDownloaderPlugin extends JavaPlugin implements Multiverse
             return true;
         }
 
-        final Conversable conversable = (Conversable) sender;
-        final Conversation conversation = new ConversationFactory(this)
-                .withFirstPrompt(new InitialPrompt(this, sender))
-                .withEscapeSequence("##")
-                .withModality(false).buildConversation(conversable);
-        conversation.begin();
-        return true;
+        if (args.length == 0) {
+            final Conversable conversable = (Conversable) sender;
+            final Conversation conversation = new ConversationFactory(this)
+                    .withFirstPrompt(new InitialPrompt(this, sender))
+                    .withEscapeSequence("##")
+                    .withModality(false).buildConversation(conversable);
+            conversation.begin();
+            return true;
+        } else {
+            // Handle argument based, non-conversation, command.
+            return false;
+        }
     }
 
     @Override
