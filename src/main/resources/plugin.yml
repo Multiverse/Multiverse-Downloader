@@ -1,0 +1,17 @@
+name: Multiverse-Downloader
+main: com.mvplugin.downloader.MultiverseDownloaderPlugin
+authors: ['dumptruckman']
+version: maven-version-number
+softdepend: [Multiverse-Core]
+
+commands:
+  mvdownload:
+    description: Starts the Multiverse download dialog.
+    usage: /<command>
+    aliases: [mvd]
+    permission: multiverse.download
+    
+permissions:
+  multiverse.download:
+    description: Allows for use of the /mvdownload command.
+    default: OP
