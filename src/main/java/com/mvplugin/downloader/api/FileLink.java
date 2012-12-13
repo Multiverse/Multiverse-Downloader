@@ -1,5 +1,6 @@
 package com.mvplugin.downloader.api;
 
+import java.net.URL;
 import java.util.Date;
 
 /**
@@ -78,4 +79,6 @@ public interface FileLink {
      * @return the known caveats for this file.
      */
     String getKnownCaveats();
+
+    URL getDownloadLink();
 }

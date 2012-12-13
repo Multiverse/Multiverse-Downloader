@@ -6,7 +6,8 @@ package com.mvplugin.downloader.api;
 public enum VersionType {
     ALPHA("Alpha"),
     BETA("Beta"),
-    RELEASE("Release");
+    RELEASE("Release"),
+    UNKNOWN("Unknown");
 
     private final String name;
 

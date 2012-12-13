@@ -1,5 +1,6 @@
 package com.mvplugin.downloader.prompts;
 
+import com.mvplugin.downloader.api.FileLink;
 import com.mvplugin.downloader.api.MultiverseDownloader;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -22,7 +23,24 @@ class DownloadPrompt extends DownloaderPrompt {
     }
 
     @Override
-    protected Prompt handleInput(final ConversationContext context, final String input) {
-        return null;
+    protected Prompt handleInput(final ConversationContext context, String input) {
+        if (input.startsWith("-a ")) {
+            input = input.replace("-a ", "");
+        } else {
+            input = "Multiverse-" + input;
+        }
+        FileLink link = plugin.getSiteLink(input).getFiles().get(0);
+        sender.sendMessage("Version: " + link.getVersion());
+        sender.sendMessage("Game Version: " + link.getGameVersion());
+        sender.sendMessage("File Name: " + link.getFileName());
+        sender.sendMessage("File URL: " + link.getDownloadLink());
+        sender.sendMessage("File Size: " + link.getFileSize());
+        sender.sendMessage("Downloads: " + link.getDownloadCount());
+        sender.sendMessage("MD5 length: " + link.getMD5CheckSum().length);
+        sender.sendMessage("Type: " + link.getType().getName());
+        sender.sendMessage("Uploaded on: " + link.getUploadedDate());
+        sender.sendMessage("Change Log: " + link.getChangeLog());
+        sender.sendMessage("Known Caveats: " + link.getKnownCaveats());
+        return END_OF_CONVERSATION;
     }
 }

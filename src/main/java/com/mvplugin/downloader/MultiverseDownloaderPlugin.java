@@ -12,6 +12,9 @@ import org.bukkit.conversations.ConversationFactory;
 import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import javax.xml.stream.XMLStreamException;
+import java.io.IOException;
+
 /**
  * The main plugin class for Multiverse-Downloader.
  *
@@ -30,7 +33,11 @@ public class MultiverseDownloaderPlugin extends JavaPlugin implements Multiverse
             multiversePermission = new Permission("multiverse.*");
             Bukkit.getPluginManager().addPermission(multiversePermission);
         }
-        final Permission downloadPermission = Bukkit.getPluginManager().getPermission("multiverse.download");
+        Permission downloadPermission = Bukkit.getPluginManager().getPermission("multiverse.download");
+        if (downloadPermission == null) {
+            downloadPermission = new Permission("multiverse.download");
+            Bukkit.getPluginManager().addPermission(downloadPermission);
+        }
         downloadPermission.addParent(multiversePermission, true);
         Bukkit.getPluginManager().recalculatePermissionDefaults(multiversePermission);
         Bukkit.getPluginManager().recalculatePermissionDefaults(downloadPermission);
@@ -60,6 +67,13 @@ public class MultiverseDownloaderPlugin extends JavaPlugin implements Multiverse
 
     @Override
     public SiteLink getSiteLink(final String pluginName) {
-        return new DefaultSiteLink();
+        try {
+            return new DefaultSiteLink(this, pluginName);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (XMLStreamException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
