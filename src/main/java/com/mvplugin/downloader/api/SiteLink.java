@@ -10,6 +10,13 @@ import java.util.List;
 public interface SiteLink {
 
     /**
+     * Gets the name of the plugin this site belongs to.
+     *
+     * @return the name of the plugin this site belongs to.
+     */
+    String getPluginName();
+
+    /**
      * Retrieves the available files from this plugin site in date order.
      *
      * The most recent file will be the first element of the list and the oldest file the last.

@@ -10,9 +10,9 @@ import org.bukkit.conversations.Prompt;
 /**
  * The conversation prompt for choosing which plugin to download.
  */
-class DownloadPrompt extends DownloaderPrompt {
+public class DownloadPrompt extends DownloaderPrompt {
 
-    DownloadPrompt(final MultiverseDownloader plugin, final CommandSender sender) {
+    public DownloadPrompt(final MultiverseDownloader plugin, final CommandSender sender) {
         super(plugin, sender);
     }
 
@@ -41,6 +41,7 @@ class DownloadPrompt extends DownloaderPrompt {
         sender.sendMessage("Uploaded on: " + link.getUploadedDate());
         sender.sendMessage("Change Log: " + link.getChangeLog());
         sender.sendMessage("Known Caveats: " + link.getKnownCaveats());
+        plugin.downloadPlugin(link);
         return END_OF_CONVERSATION;
     }
 }

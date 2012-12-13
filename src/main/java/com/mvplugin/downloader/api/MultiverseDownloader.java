@@ -12,4 +12,6 @@ public interface MultiverseDownloader {
      * @return a site link for the given plugin name.
      */
     SiteLink getSiteLink(String pluginName);
+
+    void downloadPlugin(FileLink fileLink);
 }

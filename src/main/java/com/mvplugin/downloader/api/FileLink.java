@@ -11,6 +11,13 @@ import java.util.Date;
 public interface FileLink {
 
     /**
+     * Gets the name of the plugin this file belongs to.
+     *
+     * @return the name of the plugin this file belongs to.
+     */
+    String getPluginName();
+
+    /**
      * Gets the plugin version.
      *
      * @return the plugin version.

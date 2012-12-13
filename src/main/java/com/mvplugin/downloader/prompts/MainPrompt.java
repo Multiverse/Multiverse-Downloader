@@ -9,9 +9,9 @@ import org.bukkit.conversations.Prompt;
 /**
  * The initial conversation prompt after using the /mvdownload command.
  */
-public class InitialPrompt extends DownloaderPrompt {
+public class MainPrompt extends DownloaderPrompt {
 
-    public InitialPrompt(final MultiverseDownloader plugin, final CommandSender sender) {
+    public MainPrompt(final MultiverseDownloader plugin, final CommandSender sender) {
         super(plugin, sender);
     }
 
@@ -25,7 +25,7 @@ public class InitialPrompt extends DownloaderPrompt {
 
     @Override
     protected Prompt handleInput(final ConversationContext context, final String input) {
-        if (input.equalsIgnoreCase("download")) {
+        if (input.equalsIgnoreCase("download") || input.equalsIgnoreCase("dl")) {
             return new DownloadPrompt(plugin, sender);
         }
         return this;

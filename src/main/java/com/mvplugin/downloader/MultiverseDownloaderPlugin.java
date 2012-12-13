@@ -1,19 +1,31 @@
 package com.mvplugin.downloader;
 
+import com.mvplugin.downloader.api.FileLink;
 import com.mvplugin.downloader.api.MultiverseDownloader;
 import com.mvplugin.downloader.api.SiteLink;
-import com.mvplugin.downloader.prompts.InitialPrompt;
+import com.mvplugin.downloader.prompts.DownloadPrompt;
+import com.mvplugin.downloader.prompts.MainPrompt;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.conversations.Conversable;
 import org.bukkit.conversations.Conversation;
 import org.bukkit.conversations.ConversationFactory;
+import org.bukkit.conversations.Prompt;
 import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.xml.stream.XMLStreamException;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.security.DigestInputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * The main plugin class for Multiverse-Downloader.
@@ -21,6 +33,11 @@ import java.io.IOException;
  * All of this plugin's specific functionality is cleanly available via {@link MultiverseDownloader}.
  */
 public class MultiverseDownloaderPlugin extends JavaPlugin implements MultiverseDownloader {
+
+    private static final int BUFFER_SIZE = 1024;
+
+    private final String updateFolderName = YamlConfiguration
+            .loadConfiguration(new File("bukkit.yml")).getString("settings.update-folder");
 
     @Override
     public void onEnable() {
@@ -52,28 +69,122 @@ public class MultiverseDownloaderPlugin extends JavaPlugin implements Multiverse
         }
 
         if (args.length == 0) {
-            final Conversable conversable = (Conversable) sender;
-            final Conversation conversation = new ConversationFactory(this)
-                    .withFirstPrompt(new InitialPrompt(this, sender))
-                    .withEscapeSequence("##")
-                    .withModality(false).buildConversation(conversable);
-            conversation.begin();
+            startConversation(sender, new MainPrompt(this, sender));
             return true;
         } else {
+            if (args[0].equalsIgnoreCase("download") || args[0].equalsIgnoreCase("dl")) {
+                startConversation(sender, new DownloadPrompt(this, sender));
+            }
             // Handle argument based, non-conversation, command.
             return false;
         }
     }
 
+    private void startConversation(final CommandSender sender, final Prompt initialPrompt) {
+        final Conversable conversable = (Conversable) sender;
+        final Conversation conversation = new ConversationFactory(this)
+                .withFirstPrompt(initialPrompt)
+                .withEscapeSequence("##")
+                .withModality(false).buildConversation(conversable);
+        conversation.begin();
+    }
+
     @Override
     public SiteLink getSiteLink(final String pluginName) {
         try {
-            return new DefaultSiteLink(this, pluginName);
+            return new DefaultSiteLink(this, pluginName, pluginName);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (XMLStreamException e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public void downloadPlugin(final FileLink fileLink) {
+        final File file = new File("plugins/" + updateFolderName, fileLink.getFileName());
+        if(!file.getParentFile().exists()) {
+            file.getParentFile().mkdirs();
+        }
+
+        InputStream in = null;
+        OutputStream fout = null;
+        MessageDigest md = null;
+        try {
+            md = MessageDigest.getInstance("MD5");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        try {
+            in = new BufferedInputStream(fileLink.getDownloadLink().openStream());
+            if (md != null) {
+                in = new DigestInputStream(in, md);
+            }
+            fout = new FileOutputStream(file);
+            streamCopy(in, fout);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException ignore) { }
+            }
+            if (fout != null) {
+                try {
+                    fout.close();
+                } catch (IOException ignore) { }
+            }
+        }
+
+        if (md != null) {
+            byte[] remoteMD5 = fileLink.getMD5CheckSum();
+            byte[] localMD5 = md.digest();
+            boolean valid = true;
+            System.out.println(remoteMD5.length + " + " + localMD5.length);
+            if (remoteMD5.length != localMD5.length) {
+                valid = false;
+            }
+            for (int i = 0; i < remoteMD5.length && valid; i++) {
+                System.out.println(remoteMD5[i] + " vs " + localMD5[i]);
+                if (remoteMD5[i] != localMD5[i]) {
+                    valid = false;
+                }
+            }
+            if (!valid) {
+                getLogger().warning("The downloaded file seems to be corrupt!  Deleting...");
+                file.delete();
+            }
+        }
+    }
+
+    private void hotSwapPlugin() {
+        /**
+        final Plugin plugin = Bukkit.getPluginManager().getPlugin(fileLink.getPluginName());
+        if (plugin == null && hotSwap) {
+            hotSwap = false;
+        }
+        if (hotSwap) {
+            //folder = new File("plugins");
+            try {
+                file = new File(plugin.getClass().getProtectionDomain()
+                        .getCodeSource().getLocation().toURI());
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+                return;
+            }
+            Bukkit.getPluginManager().disablePlugin(plugin);
+        }
+         **/
+    }
+
+    private void streamCopy(final InputStream in, final OutputStream out) throws IOException {
+        byte[] data = new byte[BUFFER_SIZE];
+        int count;
+        while ((count = in.read(data, 0, BUFFER_SIZE)) != -1)
+        {
+            out.write(data, 0, count);
+        }
     }
 }

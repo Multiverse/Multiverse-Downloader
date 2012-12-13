@@ -17,11 +17,10 @@ import java.util.Date;
  */
 class DefaultFileLink implements FileLink {
 
-    private static final int BUFFER_SIZE = 1024;
-
     private static final String LS = "\n";
 
-    private final MultiverseDownloaderPlugin plugin;
+    private final String pluginName;
+
     private final URL filePageURL;
 
     private final String version;
@@ -36,8 +35,8 @@ class DefaultFileLink implements FileLink {
     private final String knownCaveats;
     private final byte[] md5CheckSum;
 
-    DefaultFileLink(final MultiverseDownloaderPlugin plugin, final String link) throws MalformedURLException, IOException {
-        this.plugin = plugin;
+    DefaultFileLink(final String link, final String pluginName) throws MalformedURLException, IOException {
+        this.pluginName = pluginName;
         this.filePageURL = new URL(link);
         final URLConnection urlConn = filePageURL.openConnection();
         BufferedReader reader = null;
@@ -194,6 +193,11 @@ class DefaultFileLink implements FileLink {
                 .replaceAll("</em>", ChatColor.RESET.toString())
                 //.replaceAll("<a\\s.*\">", "")
                 .replaceAll("<.+?>", "");
+    }
+
+    @Override
+    public String getPluginName() {
+        return pluginName;
     }
 
     @Override

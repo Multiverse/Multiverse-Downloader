@@ -31,23 +31,30 @@ class DefaultSiteLink implements SiteLink {
     //private static final String ITEM = "item";
 
     private final MultiverseDownloaderPlugin plugin;
+    private final String pluginName;
     private final String slug;
     private final List<FileLink> fileLinks;
 
-    DefaultSiteLink(final MultiverseDownloaderPlugin plugin, final String slug) throws MalformedURLException, IOException, XMLStreamException {
+    DefaultSiteLink(final MultiverseDownloaderPlugin plugin, final String slug, final String pluginName) throws MalformedURLException, IOException, XMLStreamException {
         this.plugin = plugin;
         this.slug = slug;
+        this.pluginName = pluginName;
 
         final List<FileLink> fileLinks = new ArrayList<FileLink>();
         for (final String link : readFilesFeed(new URL(DBO_URL + slug + "/files.rss"))) {
             try {
-                final FileLink fileLink = new DefaultFileLink(plugin, link);
+                final FileLink fileLink = new DefaultFileLink(link, pluginName);
                 fileLinks.add(fileLink);
             } catch (IOException ignore) {
 
             }
         }
         this.fileLinks = Collections.unmodifiableList(fileLinks);
+    }
+
+    @Override
+    public String getPluginName() {
+        return pluginName;
     }
 
     @Override
