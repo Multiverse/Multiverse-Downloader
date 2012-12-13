@@ -1,7 +1,11 @@
 package com.mvplugin.downloader.api;
 
+import java.util.Date;
+
 /**
  * Represents an available version of a plugin retrieved from a SiteLink.
+ *
+ * All information obtained here is as it is represented on the website where this file is located.
  */
 public interface FileLink {
 
@@ -27,11 +31,11 @@ public interface FileLink {
     String getFileName();
 
     /**
-     * Gets the plugin file size.
+     * Gets the plugin file size in bytes.
      *
-     * @return the plugin file size.
+     * @return the plugin file size in bytes.
      */
-    String getFileSize();
+    long getFileSize();
 
     /**
      * Gets the type of version this plugin file is.
@@ -40,4 +44,38 @@ public interface FileLink {
      */
     VersionType getType();
 
+    /**
+     * Gets the MD5 check sum for the file.
+     *
+     * @return the MD5 check sum for the file.
+     */
+    byte[] getMD5CheckSum();
+
+    /**
+     * Gets the number of downloads for this plugin file.
+     *
+     * @return the number of downloads for this plugin file.
+     */
+    int getDownloadCount();
+
+    /**
+     * Gets the date that the file was uploaded.
+     *
+     * @return the date that the file was uploaded.
+     */
+    Date getUploadedDate();
+
+    /**
+     * Gets the change log for this file.
+     *
+     * @return the change log for this file.
+     */
+    String getChangeLog();
+
+    /**
+     * Gets the known caveats for this file.
+     *
+     * @return the known caveats for this file.
+     */
+    String getKnownCaveats();
 }
