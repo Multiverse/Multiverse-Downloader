@@ -33,7 +33,7 @@ class DefaultFileLink implements FileLink {
     private final Date uploadDate;
     private final String changeLog;
     private final String knownCaveats;
-    private final byte[] md5CheckSum;
+    private final String md5CheckSum;
 
     DefaultFileLink(final String link, final String pluginName) throws MalformedURLException, IOException {
         this.pluginName = pluginName;
@@ -179,7 +179,7 @@ class DefaultFileLink implements FileLink {
         } else {
             this.uploadDate = new Date(epochTime);
         }
-        this.md5CheckSum = md5.getBytes();
+        this.md5CheckSum = md5;
         this.changeLog = changeLog.toString();
         this.knownCaveats = knownCaveats.toString();
     }
@@ -231,7 +231,7 @@ class DefaultFileLink implements FileLink {
     }
 
     @Override
-    public byte[] getMD5CheckSum() {
+    public String getMD5CheckSum() {
         return md5CheckSum;
     }
 

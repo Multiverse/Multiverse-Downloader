@@ -36,7 +36,7 @@ public class DownloadPrompt extends DownloaderPrompt {
         sender.sendMessage("File URL: " + link.getDownloadLink());
         sender.sendMessage("File Size: " + link.getFileSize());
         sender.sendMessage("Downloads: " + link.getDownloadCount());
-        sender.sendMessage("MD5 length: " + link.getMD5CheckSum().length);
+        sender.sendMessage("MD5: " + link.getMD5CheckSum());
         sender.sendMessage("Type: " + link.getType().getName());
         sender.sendMessage("Uploaded on: " + link.getUploadedDate());
         sender.sendMessage("Change Log: " + link.getChangeLog());

@@ -53,11 +53,11 @@ public interface FileLink {
     VersionType getType();
 
     /**
-     * Gets the MD5 check sum for the file.
+     * Gets the MD5 check sum for the file in hexidecimal.
      *
-     * @return the MD5 check sum for the file.
+     * @return the MD5 check sum for the file in hexidecimal.
      */
-    byte[] getMD5CheckSum();
+    String getMD5CheckSum();
 
     /**
      * Gets the number of downloads for this plugin file.
