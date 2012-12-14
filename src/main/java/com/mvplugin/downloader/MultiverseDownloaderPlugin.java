@@ -41,7 +41,13 @@ public class MultiverseDownloaderPlugin extends JavaPlugin implements Multiverse
 
     @Override
     public void onEnable() {
-        setupParentPermission();
+        //setupParentPermission();
+        /*for (Provider prov : Security.getProviders()) {
+            System.out.println(prov);
+            for (Provider.Service srv : prov.getServices()) {
+                System.out.println(" " + srv.getAlgorithm());
+            }
+        }*/
     }
 
     private void setupParentPermission() {
@@ -139,15 +145,13 @@ public class MultiverseDownloaderPlugin extends JavaPlugin implements Multiverse
         }
 
         if (md != null) {
-            byte[] remoteMD5 = fileLink.getMD5CheckSum();
+            byte[] remoteMD5 = hexStringToByteArray(fileLink.getMD5CheckSum());
             byte[] localMD5 = md.digest();
             boolean valid = true;
-            System.out.println(remoteMD5.length + " + " + localMD5.length);
             if (remoteMD5.length != localMD5.length) {
                 valid = false;
             }
             for (int i = 0; i < remoteMD5.length && valid; i++) {
-                System.out.println(remoteMD5[i] + " vs " + localMD5[i]);
                 if (remoteMD5[i] != localMD5[i]) {
                     valid = false;
                 }
@@ -157,6 +161,14 @@ public class MultiverseDownloaderPlugin extends JavaPlugin implements Multiverse
                 file.delete();
             }
         }
+    }
+
+    private static byte[] hexStringToByteArray(final String s) {
+        byte data[] = new byte[s.length() / 2];
+        for(int i = 0; i < s.length();i += 2) {
+            data[i / 2] = (Integer.decode("0x" + s.charAt(i) + s.charAt(i + 1))).byteValue();
+        }
+        return data;
     }
 
     private void hotSwapPlugin() {
