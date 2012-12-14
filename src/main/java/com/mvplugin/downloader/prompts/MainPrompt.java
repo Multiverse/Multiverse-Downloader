@@ -17,10 +17,11 @@ public class MainPrompt extends DownloaderPrompt {
 
     @Override
     public String getText(final ConversationContext context) {
-        return ChatColor.AQUA + "What would you like to do?"
+        sender.sendMessage(ChatColor.AQUA + "What would you like to do?"
                 + "\n" + ChatColor.WHITE + "  Download"
                 + "\n" + ChatColor.ITALIC + ChatColor.GRAY + "Type " + ChatColor.GREEN + "## "
-                + ChatColor.GRAY + "at any time to end this conversation.";
+                + ChatColor.GRAY + "at any time to end this conversation.");
+        return "";
     }
 
     @Override

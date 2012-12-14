@@ -86,7 +86,7 @@ public class MultiverseDownloaderPlugin extends JavaPlugin implements Multiverse
         }
     }
 
-    private void startConversation(final CommandSender sender, final Prompt initialPrompt) {
+    public void startConversation(final CommandSender sender, final Prompt initialPrompt) {
         final Conversable conversable = (Conversable) sender;
         final Conversation conversation = new ConversationFactory(this)
                 .withFirstPrompt(initialPrompt)
@@ -96,15 +96,9 @@ public class MultiverseDownloaderPlugin extends JavaPlugin implements Multiverse
     }
 
     @Override
-    public SiteLink getSiteLink(final String pluginName) {
-        try {
-            return new DefaultSiteLink(this, pluginName, pluginName);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (XMLStreamException e) {
-            e.printStackTrace();
-        }
-        return null;
+    public SiteLink getSiteLink(final String pluginName) throws IOException, XMLStreamException {
+        // TODO Get mapped plugin slugs if available
+        return new DefaultSiteLink(this, pluginName, pluginName);
     }
 
     @Override
