@@ -97,25 +97,25 @@ class DefaultFileLink implements FileLink {
                 else if (line.contains("<dt>Game version</dt>")) {
                     gameVersionLine = counter + 1;
                 } else if (counter == gameVersionLine) {
-                    gameVersion = line.replaceAll("<dd>.*<li>", "").replaceAll("</li>.*</dd>", "").trim();
+                    gameVersion = line.replaceAll("<dd>.*?<li>", "").replaceAll("</li>.*</dd>", "").trim();
                 }
                 // Search for version Type
                 else if (line.contains("<dt>Type</dt>")) {
                     versionTypeLine = counter + 1;
                 } else if (counter == versionTypeLine) {
-                    versionType = line.replaceAll("<dd>.*-b\">", "").replaceAll("</span></dd>", "").trim();
+                    versionType = line.replaceAll("<dd>.*?\">", "").replaceAll("</span></dd>", "").trim();
                 }
                 // Search for download count
                 else if (line.contains("<dt>Downloads</dt>")) {
                     downloadCountLine = counter + 1;
                 } else if (counter == downloadCountLine) {
-                    downloadCount = line.replaceAll("<dd>.*e=\"", "").replaceAll("\">.*</dd>", "").trim();
+                    downloadCount = line.replaceAll("<dd>.*?e=\"", "").replaceAll("\">.*</dd>", "").trim();
                 }
                 // Search for download count
                 else if (line.contains("<dt>Uploaded on</dt>")) {
                     uploadDateLine = counter + 1;
                 } else if (counter == uploadDateLine) {
-                    uploadDate = line.replaceAll("<dd>.*epoch=\"", "").replaceAll("\"\\sdata.*</dd>", "").trim();
+                    uploadDate = line.replaceAll("<dd>.*?epoch=\"", "").replaceAll("\"\\sdata.*?</dd>", "").trim();
                 }
                 // Search for md5
                 else if (line.contains("<dt>MD5</dt>")) {
