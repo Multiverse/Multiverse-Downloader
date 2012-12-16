@@ -17,16 +17,16 @@ public class MainPrompt extends DownloaderPrompt {
 
     @Override
     public String getText(final ConversationContext context) {
-        sender.sendMessage(ChatColor.AQUA + "What would you like to do?"
-                + "\n" + ChatColor.WHITE + "  Download"
-                + "\n" + ChatColor.ITALIC + ChatColor.GRAY + "Type " + ChatColor.GREEN + "## "
-                + ChatColor.GRAY + "at any time to end this conversation.");
+        sender.sendMessage(ChatColor.ITALIC.toString() + ChatColor.GRAY + "Type " + ChatColor.GREEN + "## "
+                + ChatColor.GRAY + "at any time to end this conversation."
+                + "\n" + ChatColor.GOLD + "What would you like to do?"
+                + "\n" + ChatColor.WHITE + "  1.  " + ChatColor.GRAY + "Download");
         return "";
     }
 
     @Override
     protected Prompt handleInput(final ConversationContext context, final String input) {
-        if (input.equalsIgnoreCase("download") || input.equalsIgnoreCase("dl")) {
+        if (input.equals("1")) {
             return new DownloadPrompt(plugin, sender);
         }
         return this;

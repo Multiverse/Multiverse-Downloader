@@ -1,5 +1,6 @@
 package com.mvplugin.downloader.api;
 
+import com.mvplugin.downloader.DownloadException;
 import org.bukkit.command.CommandSender;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.plugin.Plugin;
@@ -20,7 +21,7 @@ public interface MultiverseDownloader extends Plugin {
      */
     SiteLink getSiteLink(String pluginName) throws IOException, XMLStreamException;
 
-    void downloadPlugin(FileLink fileLink);
+    void downloadPlugin(FileLink fileLink) throws DownloadException;
 
     void startConversation(final CommandSender sender, final Prompt initialPrompt);
 }

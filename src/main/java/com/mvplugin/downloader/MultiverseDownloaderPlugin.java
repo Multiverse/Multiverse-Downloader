@@ -14,6 +14,7 @@ import org.bukkit.conversations.Conversation;
 import org.bukkit.conversations.ConversationFactory;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.permissions.Permission;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.xml.stream.XMLStreamException;
@@ -91,6 +92,7 @@ public class MultiverseDownloaderPlugin extends JavaPlugin implements Multiverse
         final Conversation conversation = new ConversationFactory(this)
                 .withFirstPrompt(initialPrompt)
                 .withEscapeSequence("##")
+                // TODO config for modality
                 .withModality(false).buildConversation(conversable);
         conversation.begin();
     }
@@ -102,8 +104,13 @@ public class MultiverseDownloaderPlugin extends JavaPlugin implements Multiverse
     }
 
     @Override
-    public void downloadPlugin(final FileLink fileLink) {
-        final File file = new File("plugins/" + updateFolderName, fileLink.getFileName());
+    public void downloadPlugin(final FileLink fileLink) throws DownloadException {
+        final File file;
+        if (Bukkit.getPluginManager().getPlugin(fileLink.getPluginName()) == null) {
+            file = new File("plugins", fileLink.getFileName());
+        } else {
+            file = new File("plugins/" + updateFolderName, fileLink.getFileName());
+        }
         if(!file.getParentFile().exists()) {
             file.getParentFile().mkdirs();
         }
@@ -151,8 +158,11 @@ public class MultiverseDownloaderPlugin extends JavaPlugin implements Multiverse
                 }
             }
             if (!valid) {
-                getLogger().warning("The downloaded file seems to be corrupt!  Deleting...");
-                file.delete();
+                try {
+                    throw new DownloadException("The downloaded file seems to be corrupt!  Deleted corrupt download.");
+                } finally {
+                    file.delete();
+                }
             }
         }
     }

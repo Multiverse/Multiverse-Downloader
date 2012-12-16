@@ -3,6 +3,7 @@ package com.mvplugin.downloader.prompts;
 import com.mvplugin.downloader.api.FileLink;
 import com.mvplugin.downloader.api.MultiverseDownloader;
 import com.mvplugin.downloader.api.SiteLink;
+import com.mvplugin.downloader.tasks.DownloadTask;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.conversations.ConversationContext;
@@ -32,12 +33,18 @@ public class VersionSelectPrompt extends DownloaderPrompt {
     protected String getText(final ConversationContext context) {
         sender.sendMessage(ChatColor.BOLD.toString() + ChatColor.DARK_AQUA + siteLink.getPluginName() + ChatColor.RESET
                 + "\n" + ChatColor.AQUA + "The following versions are available for download: " + choices
-                + "\n" + ChatColor.AQUA + "Enter the number for the version you would link to download.");
+                + "\n" + ChatColor.GOLD + "Enter the number for the version you would link to download.");
         return "";
     }
 
     @Override
     protected Prompt handleInput(final ConversationContext context, final String input) {
-        return END_OF_CONVERSATION;
+        try {
+            int selection = Integer.parseInt(input);
+            if (selection >= 1 && selection <= siteLink.getFiles().size()) {
+                return new FileMenuPrompt(plugin, sender, siteLink, siteLink.getFiles().get(selection - 1));
+            }
+        } catch (NumberFormatException ignore) { }
+        return this;
     }
 }
