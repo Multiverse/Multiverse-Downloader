@@ -26,15 +26,15 @@
             </properties>
         </profile>
     </profiles>
-    
+
     <distributionManagement>
         <repository>
-            <id>Multiverse</id>
-            <url>http://repo.onarandombox.com/content/repositories/multiverse</url>
+            <id>OnARandomBox</id>
+            <url>http://repo.onarandombox.com/content/repositories/multiverse/</url>
         </repository>
         <snapshotRepository>
-            <id>Multiverse-Snapshots</id>
-            <url>http://repo.onarandombox.com/content/repositories/multiverse-snapshots</url>
+            <id>OnARandomBox</id>
+            <url>http://repo.onarandombox.com/content/repositories/multiverse-snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
 
